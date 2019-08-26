@@ -1,0 +1,66 @@
+version: '3.4'
+
+networks:
+  corp:
+    driver: bridge
+
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: Docker-nginx/Dockerfile
+    links:
+        - docker_demo1:docker_demo1
+        - docker_demo2:docker_demo2
+        - docker_demo3:docker_demo3
+    networks:
+      - corp
+    ports:
+        - "80:80"
+  docker_demo1:
+    build:
+      context: .
+      dockerfile: Docker_demo/Dockerfile
+    container_name: docker_demo1
+    networks:
+      - corp
+    links:
+      - redis_image:redis_image
+    environment:
+      - Database:Redis
+    ports:
+      - "5000:5000"
+  docker_demo2:
+    build:
+      context: .
+      dockerfile: Docker_demo/Dockerfile
+    container_name: docker_demo2
+    networks:
+      - corp
+    links:
+      - redis_image:redis_image
+    environment:
+      - Database:Redis
+    ports:
+      - "5002:5000"
+  docker_demo3:
+    build:
+      context: .
+      dockerfile: Docker_demo/Dockerfile
+    container_name: docker_demo3
+    networks:
+      - corp
+    links:
+      - redis_image:redis_image
+    environment:
+      - Database:Redis
+    ports:
+      - "5004:5000"
+  redis_image:
+    image: redis
+    container_name: cache
+    networks:
+      - corp
+    ports:
+        - "6379:6379"
