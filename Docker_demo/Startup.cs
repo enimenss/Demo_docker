@@ -16,9 +16,11 @@ namespace Docker_demo
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private ILogger _logger;
+        public Startup(IConfiguration configuration,ILogger<Startup> logger)
         {
             Configuration = configuration;
+            _logger = logger;
         }
 
         public IConfiguration Configuration { get; }
@@ -32,6 +34,7 @@ namespace Docker_demo
             var redis = new RedisManagerPool(redisHost);
             redis.GetClient();
             services.AddSingleton<RedisManagerPool>(redis);
+            _logger.LogInformation("Setting up services");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +51,8 @@ namespace Docker_demo
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            _logger.LogInformation("Configurating");
         }
     }
 }

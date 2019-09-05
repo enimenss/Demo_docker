@@ -59,7 +59,7 @@ services:
       - "5004:5000"
   redis_image:
     image: redis
-    container_name: cache
+    container_name: redis
     networks:
       - corp
     ports:
